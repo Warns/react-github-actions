@@ -2,6 +2,8 @@ name: CI
 on:
   pull_request:
     branches: [develop]
+  push:
+    branches: [develop]
 
 jobs:
   build:
@@ -22,3 +24,14 @@ jobs:
         # we add an env variable as below
         env:
           CI: true
+      - name: Build Project
+        if: github.event_name == 'push'
+        run: npm run build
+      - name: Deploy to staging
+        if: github.event_name == 'push'
+        # Instead of "npm install -g surge" we did "npx surge" which will
+        # install and then use surge all in one line.
+        run: npx surge --project ./build --domain economic-organization.surge.sh
+        env:
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}

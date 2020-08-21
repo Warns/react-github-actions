@@ -1,0 +1,24 @@
+name: CI
+on:
+  pull_request:
+    branches: [develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # Checkout into the repo to pull the code
+    steps:
+      - uses: actions/checkout@v2
+      # Use a specific version of node
+      - name: Use NodeJS
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm test -- --coverage
+        # In order to not get an interactive terminal with coverage above
+        # we add an env variable as below
+        env:
+          CI: true

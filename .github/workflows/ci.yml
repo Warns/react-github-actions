@@ -31,4 +31,7 @@ jobs:
         if: github.event_name == 'push'
         # Instead of "npm install -g surge" we did "npx surge" which will
         # install and then use surge all in one line.
-        run: npx surge
+        run: npx surge --project ./build --domain economic-organization.surge.sh
+        env:
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
